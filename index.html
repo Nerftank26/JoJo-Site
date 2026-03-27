@@ -2,35 +2,110 @@
 <html>
 <head>
   <title>Steel Ball Run Poll</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .yes-btn {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .no-btn {
+      background-color: #f44336;
+      color: white;
+    }
+
+    table {
+      margin: 30px auto;
+      border-collapse: collapse;
+      width: 300px;
+      background-color: white;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ddd;
+    }
+  </style>
 </head>
+
 <body>
 
-  <h1>Is Steel Ball Run peak?</h1>
+  <h1>Is JoJo's Bizarre Adventure: Steel Ball Run peak?</h1>
 
-  <button onclick="vote('Yes')">Yes</button>
-  <button onclick="vote('No')">No</button>
+  <button class="yes-btn" onclick="vote('Yes')">
+    YES! YES! YES! YES!
+  </button>
 
-  <h2 id="results">Loading...</h2>
+  <button class="no-btn" onclick="vote('No')">
+    No
+  </button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Answer</th>
+        <th>Votes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Yes</td>
+        <td id="yesVotes">0</td>
+      </tr>
+      <tr>
+        <td>No</td>
+        <td id="noVotes">0</td>
+      </tr>
+    </tbody>
+  </table>
 
   <script>
     async function vote(answer) {
-      await fetch('/vote', {
+      await fetch('/api/vote', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({answer})
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ answer })
       });
-      load();
+
+      loadResults();
     }
 
-    async function load() {
-      const res = await fetch('/results');
+    async function loadResults() {
+      const res = await fetch('/api/results');
       const data = await res.json();
 
-      document.getElementById('results').innerText =
-        "Yes: " + (data.Yes || 0) + " | No: " + (data.No || 0);
+      document.getElementById('yesVotes').innerText = data.Yes || 0;
+      document.getElementById('noVotes').innerText = data.No || 0;
     }
 
-    load();
+    loadResults();
   </script>
 
 </body>
