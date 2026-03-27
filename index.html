@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Steel Ball Run Poll</title>
+</head>
+<body>
+
+  <h1>Is Steel Ball Run peak?</h1>
+
+  <button onclick="vote('Yes')">Yes</button>
+  <button onclick="vote('No')">No</button>
+
+  <h2 id="results">Loading...</h2>
+
+  <script>
+    async function vote(answer) {
+      await fetch('/vote', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({answer})
+      });
+      load();
+    }
+
+    async function load() {
+      const res = await fetch('/results');
+      const data = await res.json();
+
+      document.getElementById('results').innerText =
+        "Yes: " + (data.Yes || 0) + " | No: " + (data.No || 0);
+    }
+
+    load();
+  </script>
+
+</body>
+</html>
